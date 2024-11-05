@@ -20,7 +20,6 @@ app.use(express.urlencoded({ extended: false }));
 
 // * API Endpoints
 // * Important: All routes will have a prefix for each route
-app.use("/api/client", require("./routes/clientRoutes"));
 app.use("/api/workouts", require("./routes/workoutRoutes"));
 
 //Connect to MongoDB Atlas
