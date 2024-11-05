@@ -1,4 +1,5 @@
 // Imports used
+const workoutModel = require('../models/workoutModel');
 
 /**
  * Shows all workouts.
@@ -45,9 +46,22 @@ async function showWorkout(req, res) {
  * @returns {Promise<void>} A promise that resolves when the response has been sent.
  */
 async function createWorkout(req, res) {
-    res.status(200).send({
-        message: "New workout created"
-    });
+
+    const { title, reps, load } = req.body;
+
+    try {
+        const workout = await workoutModel.create({ title, reps, load })
+        res.status(200).send({
+            message: "New workout created",
+            data: workout
+        });
+    } catch (error) {
+        res.status(400).send({
+            message: "An error has ocurred",
+            error: error.message
+        });
+    }
+
 }
 
 
