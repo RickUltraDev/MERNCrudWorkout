@@ -117,9 +117,38 @@ const createWorkout = async (req, res) => {
  * @returns {Promise<void>} A promise that resolves when the response has been sent.
  */
 const deleteWorkout = async (req, res) => {
-    res.status(200).send({
-        message: "Workout removed"
-    });
+    try {
+        const { id } = req.params;
+
+        //Check if the param Id is not valid
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(404).json({
+                message: "Workout not found",
+                data: ""
+            });
+        }
+
+        const workout = await workoutModel.findOneAndDelete({ _id: id });
+
+        //If workout by id is not found send a response
+        if (!workout) {
+            return res.status(404).json({
+                message: "Workout not deleted",
+                data: ""
+            });
+        }
+
+        res.status(200).json({
+            message: "Workout deleted",
+            data: workout
+        });
+
+    } catch (error) {
+        res.status(400).send({
+            message: "An error has ocurred",
+            error: error.message
+        });
+    }
 }
 
 
@@ -135,9 +164,41 @@ const deleteWorkout = async (req, res) => {
  */
 
 const updateWorkout = async (req, res) => {
-    res.status(201).send({
-        message: "Workout updated"
-    });
+    try {
+        const { id } = req.params;
+
+        //Check if the param Id is not valid
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(404).json({
+                message: "Workout not found",
+                data: ""
+            });
+        }
+
+        //Update the workout based on the properties pased in request body
+        const workout = await workoutModel.findOneAndUpdate({ _id: id }, {
+            ...req.body
+        });
+
+        //If workout by id is not found send a response
+        if (!workout) {
+            return res.status(404).json({
+                message: "Workout not updated",
+                data: ""
+            });
+        }
+
+        res.status(200).json({
+            message: "Workout updated",
+            data: workout
+        });
+
+    } catch (error) {
+        res.status(400).send({
+            message: "An error has ocurred",
+            error: error.message
+        });
+    }
 }
 
 
