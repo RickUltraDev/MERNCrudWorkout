@@ -1,5 +1,6 @@
 // Imports used
 const workoutModel = require('../models/workoutModel');
+const mongoose = require('mongoose');
 
 /**
  * Shows all workouts.
@@ -11,11 +12,21 @@ const workoutModel = require('../models/workoutModel');
  * @param {Object} res - The response object representing the HTTP response.
  * @returns {Promise<void>} A promise that resolves when the response has been sent.
  */
-async function showAllWorkouts(req, res) {
-    res.status(200).send({
-        message: "Found all workouts",
-        jsonArr: []
-    });
+const showAllWorkouts = async (req, res) => {
+    try {
+        const workouts = await workoutModel.find({}).sort({ createdAt: -1 });
+
+        res.status(200).json({
+            message: "Workouts saved",
+            data: workouts
+        });
+
+    } catch (error) {
+        res.status(400).send({
+            message: "An error has ocurred",
+            error: error.message
+        });
+    }
 }
 
 /**
@@ -28,10 +39,40 @@ async function showAllWorkouts(req, res) {
  * @param {Object} res - The response object representing the HTTP response.
  * @returns {Promise<void>} A promise that resolves when the response has been sent.
  */
-async function showWorkout(req, res) {
-    res.status(200).send({
-        message: "Workout found"
-    });
+
+const showWorkout = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        //Check if the param Id is not valid
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(404).json({
+                message: "Workout not found",
+                data: ""
+            });
+        }
+
+        const workout = await workoutModel.findById(id);
+
+        //If workout by id is not found send a response
+        if (!workout) {
+            return res.status(404).json({
+                message: "Workout not found",
+                data: ""
+            });
+        }
+
+        res.status(200).json({
+            message: "Workout saved",
+            data: workout
+        });
+
+    } catch (error) {
+        res.status(400).send({
+            message: "An error has ocurred",
+            error: error.message
+        });
+    }
 }
 
 
@@ -45,12 +86,12 @@ async function showWorkout(req, res) {
  * @param {Object} res - The response object representing the HTTP response.
  * @returns {Promise<void>} A promise that resolves when the response has been sent.
  */
-async function createWorkout(req, res) {
-
+const createWorkout = async (req, res) => {
     const { title, reps, load } = req.body;
 
+    //Adding doc to db
     try {
-        const workout = await workoutModel.create({ title, reps, load })
+        const workout = await workoutModel.create({ title, reps, load });
         res.status(200).send({
             message: "New workout created",
             data: workout
@@ -75,7 +116,7 @@ async function createWorkout(req, res) {
  * @param {Object} res - The response object representing the HTTP response.
  * @returns {Promise<void>} A promise that resolves when the response has been sent.
  */
-async function deleteWorkout(req, res) {
+const deleteWorkout = async (req, res) => {
     res.status(200).send({
         message: "Workout removed"
     });
@@ -92,7 +133,8 @@ async function deleteWorkout(req, res) {
  * @param {Object} res - The response object representing the HTTP response.
  * @returns {Promise<void>} A promise that resolves when the response has been sent.
  */
-async function updateWorkout(req, res) {
+
+const updateWorkout = async (req, res) => {
     res.status(201).send({
         message: "Workout updated"
     });
