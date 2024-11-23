@@ -13,7 +13,7 @@ app.use(morgan("dev"));
 app.use(cors());
 
 //Cross origin resources to share info between domains (conection with frontend)
-app.use(cors({ origin: ["http://localhost:5173"], credentials: false }));
+app.use(cors({ origin: ["http://localhost:5173"], credentials: false, optionsSuccessStatus: 200 }));
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: false }));
 
