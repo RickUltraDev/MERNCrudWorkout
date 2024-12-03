@@ -16,10 +16,7 @@ const showAllWorkouts = async (req, res) => {
     try {
         const workouts = await workoutModel.find({}).sort({ createdAt: -1 });
 
-        res.status(200).json({
-            message: "Workouts saved",
-            data: workouts
-        });
+        res.status(200).json(workouts);
 
     } catch (error) {
         res.status(400).send({
@@ -62,10 +59,7 @@ const showWorkout = async (req, res) => {
             });
         }
 
-        res.status(200).json({
-            message: "Workout saved",
-            data: workout
-        });
+        res.status(200).json(workout);
 
     } catch (error) {
         res.status(400).send({
@@ -92,10 +86,8 @@ const createWorkout = async (req, res) => {
     //Adding doc to db
     try {
         const workout = await workoutModel.create({ title, reps, load });
-        res.status(200).send({
-            message: "New workout created",
-            data: workout
-        });
+        res.status(200).json(workout);
+
     } catch (error) {
         res.status(400).send({
             message: "An error has ocurred",
@@ -138,10 +130,7 @@ const deleteWorkout = async (req, res) => {
             });
         }
 
-        res.status(200).json({
-            message: "Workout deleted",
-            data: workout
-        });
+        res.status(200).json(workout);
 
     } catch (error) {
         res.status(400).send({
@@ -188,10 +177,7 @@ const updateWorkout = async (req, res) => {
             });
         }
 
-        res.status(200).json({
-            message: "Workout updated",
-            data: workout
-        });
+        res.status(200).json(workout);
 
     } catch (error) {
         res.status(400).send({
