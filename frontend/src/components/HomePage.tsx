@@ -1,5 +1,6 @@
 // Components
 import WorkoutCard from "./WorkoutCard";
+import WorkoutForm from "./WorkoutForm";
 
 // Interfaces
 import { Workout } from "../interfaces/workout";
@@ -42,7 +43,9 @@ const HomePage = () => {
                     <WorkoutCard key={workout._id} workout={workout} />
                 ))}
             </div>
+            <WorkoutForm />
         </div>
+
     );
 }
 export default HomePage;
